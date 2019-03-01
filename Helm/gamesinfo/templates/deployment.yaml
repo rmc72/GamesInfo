@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "webgamesinfo.fullname" . }}
+  labels:
+    app: {{ template "webgamesinfo.name" . }}
+    chart: {{ template "webgamesinfo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "webgamesinfo.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "webgamesinfo.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: {{ .Values.mysql_root_password }}
+          - name: MYSQL_DATABASE
+            value: {{ .Values.mysql_database }}
+          - name: MAIL_URL
+            value: {{ .Values.mail_url }}
+          ports:
+          - name: http
+            containerPort: {{ .Values.service.port }}
+            protocol: TCP
+          resources:
+{{ toYaml .Values.resources | indent 11 }}

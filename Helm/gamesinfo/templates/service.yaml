@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "webgamesinfo.fullname" . }}
+  labels:
+    app: {{ template "webgamesinfo.name" . }}
+    chart: {{ template "webgamesinfo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "webgamesinfo.name" . }}
+    release: {{ .Release.Name }}

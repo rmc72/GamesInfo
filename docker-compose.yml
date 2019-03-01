@@ -1,0 +1,29 @@
+web:
+  build: ./prueba_servidor
+
+  ports:
+    - "8448:8447"
+  volumes:
+    - .:/todo
+  links:
+    - db
+  environment:
+    - SPRING_DATASOURCE_URL=jdbc:mysql://db/test
+    - SPRING_DATASOURCE_PASSWORD=pass
+
+mail:
+  build: ./mailService
+
+  ports:
+    - "9011:8080"
+  volumes:
+    - .:/todo
+
+db:
+  environment:
+    - MYSQL_ROOT_PASSWORD=pass
+    - MYSQL_DATABASE=test
+  image: mysql
+
+
+

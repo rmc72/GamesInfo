@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailgamesinfo-deployment
+  labels:
+    app: mailgamesinfo
+spec:
+  selector:
+    matchLabels:
+      app: mailgamesinfo
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: mailgamesinfo
+      labels:
+        app: mailgamesinfo
+    spec:
+      containers:
+      - name: java-mail
+        image: rmc72/mailgamesinfo
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailgamesinfo-service
+  labels:
+    app: mailgamesinfo
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: mailgamesinfo
+  selector:
+    app: mailgamesinfo
+  type: NodePort

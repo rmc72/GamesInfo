@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webgamesinfo-deployment
+  labels:
+    app: webgamesinfo
+spec:
+  selector:
+    matchLabels:
+      app: webgamesinfo
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: webgamesinfo
+      labels:
+        app: webgamesinfo
+    spec:
+      containers:
+      - name: javawebgamesinfo
+        image: rmc72/webgamesinfo
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: pass
+          - name: MYSQL_DATABASE
+            value: test
+          - name: MAIL_URL
+            value: http://mailgamesinfo-service:8080/mail
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webgamesinfo-service
+  labels:
+    app: webgamesinfo
+spec:
+  ports:
+    - port: 8447
+      targetPort: 8447
+      protocol: TCP
+      name: webgamesinfo
+  selector:
+    app: webgamesinfo
+  type: LoadBalancer
+   
